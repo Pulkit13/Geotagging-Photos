@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset"utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link rel="stylesheet" type="text/css" href="css1.css"/>
+	<title>Geotagging Ansel Adams' Photographs</title>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="GeoJSON.js"></script>
+	<script type="text/javascript">
+		var map;
+		currentFeature_or_Features = null;
+		xobj = null;
+		//var useActiveX = !window.ActiveXObject && window.ActiveXObject;
+		var roadStyle = {
+			strokeColor: "#FFFF00",
+			strokeWeight: 7,
+			strokeOpacity: 0.75
+		};
+		
+		var addressStyle = {
+			icon: "img/marker-house.png"
+		};
+		
+		var parcelStyle = {
+			strokeColor: "#FF7800",
+			strokeOpacity: 1,
+			strokeWeight: 2,
+			fillColor: "#46461F",
+			fillOpacity: 0.25
+		};
+		
+		var infowindow = new google.maps.InfoWindow();
+		
+		function loadJSON(file, success)
+		{
+			xobj = new XMLHttpRequest();
+			xobj.onreadystatechange = function()
+			{
+				if (xobj.readyState === 4) {
+				if (xobj.status === 200) {
+                if (success)
+                    success(JSON.parse(xobj.responseText));
+				} 
+			}
+			};
+			xobj.open('GET', file, true);
+			xobj.send();
+		}
+		
+		function init(){
+			loadJSON('data.json', function(data) { 
+					result_obj = data; 
+					}
+				);
+			map = new google.maps.Map(document.getElementById('map'),{
+				zoom: 3,
+				center: new google.maps.LatLng(39.1141700	, -94.6274600),
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
+			
+		}
+		function clearMap(){
+			if (!currentFeature_or_Features)
+				return;
+			if (currentFeature_or_Features.length){
+				for (var i = 0; i < currentFeature_or_Features.length; i++){
+					if(currentFeature_or_Features[i].length){
+						for(var j = 0; j < currentFeature_or_Features[i].length; j++){
+							currentFeature_or_Features[i][j].setMap(null);
+						}
+					}
+					else{
+						currentFeature_or_Features[i].setMap(null);
+					}
+				}
+			}else{
+				currentFeature_or_Features.setMap(null);
+			}
+			if (infowindow.getMap()){
+				infowindow.close();
+			}
+		}
+		function showFeature(geojson, style){
+			clearMap();
+			currentFeature_or_Features = new GeoJSON(geojson, style || null);
+			if (currentFeature_or_Features.type && currentFeature_or_Features.type == "Error"){
+				
+				return;
+			}
+			if (currentFeature_or_Features.length){
+				for (var i = 0; i < currentFeature_or_Features.length; i++){
+					if(currentFeature_or_Features[i].length){
+						for(var j = 0; j < currentFeature_or_Features[i].length; j++){
+							
+							currentFeature_or_Features[i][j].setMap(map);
+							if(currentFeature_or_Features[i][j].geojsonProperties) {
+								setInfoWindow(currentFeature_or_Features[i][j]);
+							}
+						}
+					}
+					else{
+						//alert('Hello');
+						currentFeature_or_Features[i].setMap(map);
+						setInfoWindow(currentFeature_or_Features[i]);
+					}
+					//if (currentFeature_or_Features[i].geojsonProperties) {
+						
+					//}
+					
+				}
+			}else{
+				currentFeature_or_Features.setMap(map)
+				if (currentFeature_or_Features.geojsonProperties) {
+					setInfoWindow(currentFeature_or_Features);
+				}
+			}
+		}
+		function setInfoWindow (feature) {
+			google.maps.event.addListener(feature, "click", function(event) {
+				//map.setZoom(18);
+				//map.setCenter(new google.maps.LatLng(pinMarker.position.lat(), pinMarker.position.lng())); 
+				//var content = "<div id='infoBox'><div class='row'><div class='image'>";
+				var content = "<div id='infoBox'><div class=\"imageinbox\" id=\"infoboximage\">";
+				var title = this.geojsonProperties.title;
+				var location = this.geojsonProperties.location;
+				var accuracy;
+				var date = this.geojsonProperties.date;
+				if(date == "1936")
+				{
+					accuracy = "<font color=\"red\">APPROXIMATE</font>";
+				}
+				else {accuracy = "<font color=\"blue\">GEOMETRIC_CENTER</font>";}
+				var desc;
+				if(this.geojsonProperties.description != null){
+					desc = this.geojsonProperties.description;
+				}
+				else{
+					desc = "none";
+				}
+				var src = this.geojsonProperties.src;
+				
+				content += "<img src=" + "\"" + src + "\" height=\"220px\" width=\"350px\" max-height=\"100%\"/></div><div>"
+				content += "<strong> Title: </strong>" + title + "<br />";
+				content += "<strong> Location: </strong>" + location + "<br />";
+				content += "<strong> Accuracy: </strong>" + accuracy + "<br />";
+				content += "<strong> Description: </strong>" + desc + "<br />";
+				content += "<strong> Date: </strong>" + date + "<br />";
+				//for (var j in this.geojsonProperties) {
+					//content += j + ": " + this.geojsonProperties[j] + "<br />";
+				//}
+				//content += "</div></div>";
+				content += "</div></div>";
+				infowindow.setContent(content);
+				infowindow.setPosition(feature.position);
+				infowindow.open(map);
+			});
+		}
+	</script>
+</head>
+<body onload="init();">
+	<div class="span12"><br></div>
+	<div class="row">
+		<div class="image">
+			<img src="final1.jpg" />
+		</div>
+		<div>
+			<div class="menu">
+				<!--  -->
+				<div class="ext" id="flip" ontouchstart="this.classList.toggle('hover');">
+					<div class="int">
+						<div class="front">
+							<div class="largetile"><img src="ansel.jpg" /></div>
+						</div>
+						<div class="back">
+							<div class="largetile" id="blue"><p style="font-family:Times New Roman;color:white;font-size:20px; text-align:center;"><br>Ansel Easton Adams was an American photographer and environmentalist. His black-and-white landscape photographs of the American West, especially Yosemite National Park, have been widely reproduced on calendars, posters, and in books.</p></div>
+						</div>
+					</div>
+				</div>
+				<br><a href="#maptitle"><div class="tile" id="blue" onclick='showFeature(result_obj)'><span class="sitename"><h3 style="color:white; text-align:center;padding-top:19px;">Map</h3></span></div></a>
+				<br><a href="timeline.html" target="_blank"><div class="tile" id="blue"><span class="sitename"><h3 style="color:white; text-align:center;padding-top:19px;">Timeline</h3></span></div></a>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="well" id="maptitle"><h2 align="center"><font color="0088CC">Geotagged Photos</font></h2></div>
+	<!--<div class="button"><input type="button" style="color:#fff;" value="Display Locations" onclick="showFeature(result_obj);" /></div> -->
+	<div id="left">
+		<br>
+		<div id="map"></div>
+	</div>
+	<br>
+	
+	
+	
+	<div id="spaces"></div>
+</body>
+</html>

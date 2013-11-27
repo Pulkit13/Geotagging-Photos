@@ -1,0 +1,133 @@
+#left{
+			width: 99%;
+			height: 600px;
+			float:left;
+			padding: 5px 5px 8px 5px;
+		}
+		#right{
+			width: 200px;
+			height: 500px;
+			float:left;
+			padding: 10px;
+		}
+		#right div{
+			margin-bottom: 4px;
+		}
+		#right textarea{
+			height: 150px;
+			width: 300px;
+		}
+		#map{
+			height:100%;
+		}
+		#maptitle {
+			
+			width:98%;
+			height:70px;
+			padding: 5px 5px 5px 5px;
+			margin: 0px 5px 0px 0px;
+		}
+		#timeline
+		{
+			width:98%;
+			height:10px;
+			position:relative;
+		}
+		#infoBox {
+			width:350px;
+			height:350px;
+		}
+		.image{
+			position: relative;
+			float:left;
+		}
+		.menu {
+		width:auto;
+		padding:5px 0px 0px 10px;
+		height:auto;
+		display:table;
+	}
+	.imageinbox img{
+		width:350px;height:220px;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic;
+	}
+	.tile{
+		height:150px;  
+		width:250px; 
+		float:left;
+		margin:8px 0px -5px 0;
+		padding:8px;
+	}
+	#infoboximage{
+		width: 350px;
+		height: 220px;
+		max-width: 100%;
+	}
+	
+	.button{
+		display:inline-block;
+		height:100px;  
+		width:250px; 
+		margin-left:auto;
+		margin-right:auto;
+	}
+	.sitename{
+		position: relative;
+		padding: 10px 10px 10px 10px;
+		text-align : center;
+	}
+	.gmnoprint img {
+		max-width: none;
+	}
+	#blue {
+		background-color: rgb(0,64,128);
+	}
+	#green {
+		background-color: rgb(0,174,0);
+	}
+	#red {
+		background-color: rgb(214,10,61);
+	}
+	
+	.largetile{
+		height: 250px;
+		width: 250px;
+		float:left;
+		margin:2px 2px 2px 0;
+		padding: 5px;
+	}
+	.ext{ perspective: 1000; -webkit-perspective: 1000;}
+	.ext { height: 240px; width: 250px; margin:15px 0px 5px 0px;}
+	.ext:hover .int, .ext.hover {-webkit-transform: rotateY(180deg); -moz-transform:rotateY(180deg); 
+    -ms-transform:rotateY(180deg); 
+    -o-transform:rotateY(180deg); }
+	.int {
+		-webkit-transition: .75s;
+		-webkit-transform-style: preserve-3d;
+		-moz-transition: .75s;
+		-moz-transform-style: preserve-3d;
+	}
+	#flip .front {
+		-webkit-backface-visibility: hidden;
+		-moz-backface-visibility: hidden;
+		border: 1px solid #666; 
+		position: absolute;
+	}
+	#flip .back {
+		-webkit-backface-visibility: hidden;
+		-moz-backface-visibility: hidden;
+		position: absolute;
+	}
+.front { 
+	z-index: 2; 
+}
+
+.back { 
+	
+	-webkit-transform: rotateY(180deg); -moz-transform:rotateY(180deg); 
+    -ms-transform:rotateY(180deg); 
+    -o-transform:rotateY(180deg); 
+	transform:rotateY(180deg);
+}
+#spaces{
+	height:60px;
+}
